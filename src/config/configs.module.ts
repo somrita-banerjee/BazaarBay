@@ -1,8 +1,15 @@
-import { Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import {
+    Global,
+    Logger,
+    Module,
+    OnModuleDestroy,
+    OnModuleInit,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ConfigsSchema } from './configs.schema';
 import { ConfigsValidation } from './configs.validation';
 
+@Global()
 @Module({
     exports: [ConfigModule],
     imports: [
