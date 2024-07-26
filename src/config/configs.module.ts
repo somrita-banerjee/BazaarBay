@@ -1,19 +1,26 @@
-import { Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { configsSchema } from './configs.schema';
+import { ConfigsSchema } from './configs.schema';
 import { ConfigsValidation } from './configs.validation';
 
 @Module({
-  exports: [ConfigModule],
-  imports: [
-    ConfigModule.forRoot({
-      ignoreEnvFile: false,
-      load: [configsSchema],
-      validationSchema: ConfigsValidation,
-    }),
-  ],
+    exports: [ConfigModule],
+    imports: [
+        ConfigModule.forRoot({
+            ignoreEnvFile: false,
+            load: [ConfigsSchema],
+            validationSchema: ConfigsValidation,
+        }),
+    ],
 })
 export class ConfigsModule implements OnModuleInit, OnModuleDestroy {
-  onModuleInit() {}
-  onModuleDestroy() {}
+    private readonly className = ConfigsModule.name;
+    private readonly logger = new Logger(this.className);
+
+    onModuleInit() {
+        this.logger.debug('module initiated');
+    }
+    onModuleDestroy() {
+        this.logger.debug('Module destroyed');
+    }
 }
