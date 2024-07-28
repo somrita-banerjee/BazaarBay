@@ -1,4 +1,12 @@
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import {
+    IsEmail,
+    IsEnum,
+    IsNotEmpty,
+    IsPhoneNumber,
+    IsString,
+    MaxLength,
+    MinLength,
+} from 'class-validator';
 import { USER_TYPE_ENUM } from 'src/schemas/user.schema';
 
 export class LoginDto {
@@ -14,6 +22,8 @@ export class LoginDto {
 export class RegisterDto {
     @IsNotEmpty()
     @IsString()
+    @MinLength(5)
+    @MaxLength(20)
     username: string;
 
     @IsNotEmpty()
@@ -22,10 +32,13 @@ export class RegisterDto {
 
     @IsNotEmpty()
     @IsString()
+    @IsEmail()
+    @MaxLength(60)
     email: string;
 
     @IsNotEmpty()
     @IsString()
+    @MaxLength(12)
     phone_no: string;
 
     @IsNotEmpty()

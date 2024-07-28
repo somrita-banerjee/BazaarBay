@@ -19,11 +19,14 @@ import { AuthModule } from './auth/auth.module';
                 const MONGO_URI = configService.get<string>('MONGO.URI');
                 const MONGO_USER = configService.get<string>('MONGO.USER');
                 const MONGO_PASS = configService.get<string>('MONGO.PASS');
+                const MONGO_DB = configService.get<string>('MONGO.DB');
 
                 const options: MongooseModuleFactoryOptions = {
                     uri: MONGO_URI,
                     pass: MONGO_PASS,
                     user: MONGO_USER,
+                    dbName: MONGO_DB,
+
                     connectionFactory: (connection) => {
                         connection.on('connected', () =>
                             logger.debug('MongoDB connected..'),
