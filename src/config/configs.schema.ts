@@ -9,5 +9,6 @@ export const ConfigsSchema = () => ({
         URI: process.env.MONGO_URI,
         PASS: process.env.MONGO_PASS,
         USER: process.env.MONGO_USER,
+        DB: process.env.MONGO_DB,
     },
 });

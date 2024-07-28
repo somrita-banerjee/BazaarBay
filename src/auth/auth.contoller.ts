@@ -12,7 +12,9 @@ export class AuthController {
     }
 
     @Post('register')
-    register(@Body() body: RegisterDto) {
-        return this.authService.register(body);
+    async register(@Body() body: RegisterDto) {
+        try {
+            return await this.authService.register(body);
+        } catch (error) {}
     }
 }
