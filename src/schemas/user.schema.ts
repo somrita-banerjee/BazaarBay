@@ -21,7 +21,7 @@ export class User {
     @Prop({ required: true, maxlength: 12 })
     phone_no: string;
 
-    @Prop({ required: true, type: USER_TYPE_ENUM, enum: USER_TYPE_ENUM })
+    @Prop({ required: true, enum: USER_TYPE_ENUM })
     type: USER_TYPE_ENUM;
 }
 
