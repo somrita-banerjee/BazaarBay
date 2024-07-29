@@ -14,20 +14,7 @@ export class AuthController {
 
     @Post('login')
     login(@Body() body: LoginDto) {
-        try {
-            return this.authService.login(body);
-        } catch (error) {
-            throw new HttpException(
-                {
-                    status: HttpStatus.BAD_REQUEST,
-                    error: error.message,
-                },
-                HttpStatus.BAD_REQUEST,
-                {
-                    cause: error,
-                },
-            );
-        }
+        return this.authService.login(body);
     }
 
     @Post('register')

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { LoginDto, RegisterDto } from './auth.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/schemas/user.schema';
@@ -15,7 +15,28 @@ export class AuthService {
         private readonly configService: ConfigService,
     ) {}
 
-    login(body: LoginDto) {}
+    async login(body: LoginDto) {
+        const findUser = await this.userModel.findOne({
+            username: body.username,
+        });
+        if (!findUser) {
+            throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+        }
+
+        const isPasswordSame = await bcrypt.compare(
+            body.password,
+            findUser.password,
+        );
+
+        if (!isPasswordSame) {
+            throw new HttpException(
+                'Password is incorrect',
+                HttpStatus.UNAUTHORIZED,
+            );
+        }
+
+        return findUser;
+    }
 
     async register(body: RegisterDto) {
         const saltOrRounds = this.configService.get<number>(
