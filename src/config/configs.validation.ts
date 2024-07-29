@@ -7,4 +7,6 @@ export const ConfigsValidation = Joi.object({
     MONGO_PASS: Joi.string().required(),
     MONGO_URI: Joi.string().required(),
     MONGO_DB: Joi.string().default('Bazaarbay'),
+
+    SALT_ROUNDS: Joi.number().min(6).default(11),
 });

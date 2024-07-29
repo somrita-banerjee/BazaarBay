@@ -11,4 +11,7 @@ export const ConfigsSchema = () => ({
         USER: process.env.MONGO_USER,
         DB: process.env.MONGO_DB,
     },
+    SECURITY: {
+        SALT_ROUNDS: parseInt(process.env.SALT_ROUNDS, 10),
+    },
 });
