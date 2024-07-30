@@ -14,6 +14,7 @@ import { ConfigsSchema } from './config/configs.schema';
 import { ConfigService } from '@nestjs/config';
 import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 // loglevel - returns loglevels based on system environment == prpduction
 /**
@@ -65,6 +66,22 @@ const _printEnvVariables = (app: INestApplication) => {
 };
 
 /**
+ * @description configure swagger
+ * @param app
+ */
+const _configureSwagger = (app: INestApplication) => {
+    const config = new DocumentBuilder()
+        .setTitle('BazaarBay API Documentation')
+        .setVersion('1.0')
+        .addTag('Auth')
+        .build();
+
+    const document = SwaggerModule.createDocument(app, config);
+
+    SwaggerModule.setup('api-docs', app, document);
+};
+
+/**
  *
  * @param app
  */
@@ -102,6 +119,8 @@ const _configureServer = async (app: INestApplication) => {
         .enableCors({
             exposedHeaders: ['Content-Disposition'],
         });
+
+    await _configureSwagger(app);
 
     await app.listen(port);
 
