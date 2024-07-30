@@ -1,4 +1,10 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+    HttpException,
+    HttpStatus,
+    Injectable,
+    Logger,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { LoginDto, RegisterDto } from './auth.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/schemas/user.schema';
@@ -57,8 +63,29 @@ export class AuthService {
             'SECURITY.SALT_ROUNDS',
         );
         const hash = await bcrypt.hash(body.password, saltOrRounds);
-        body.password = hash;
-        const newUser = new this.userModel(body);
-        return newUser.save();
+        try {
+            body.password = hash;
+            const newUser = new this.userModel(body);
+            return newUser.save();
+        } catch (error) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.BAD_REQUEST,
+                    error: error.message,
+                },
+                HttpStatus.BAD_REQUEST,
+                {
+                    cause: error,
+                },
+            );
+        }
+    }
+
+    async getMe(userId: string) {
+        const user = await this.userModel.findOne({
+            _id: userId,
+        });
+
+        return user;
     }
 }
