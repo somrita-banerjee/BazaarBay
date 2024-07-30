@@ -1,10 +1,9 @@
 import { Logger, Module } from '@nestjs/common';
-import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
 import { OrderModule } from './order/order.module';
 import { ConfigsModule } from './config/configs.module';
 import { MongooseModule, MongooseModuleFactoryOptions } from '@nestjs/mongoose';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
@@ -62,7 +61,6 @@ import { AuthModule } from './auth/auth.module';
             },
             inject: [ConfigService],
         }),
-        UserModule,
         ProductModule,
         OrderModule,
         AuthModule,
