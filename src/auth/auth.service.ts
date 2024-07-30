@@ -1,10 +1,11 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { LoginDto, RegisterDto } from './auth.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/schemas/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +14,7 @@ export class AuthService {
     constructor(
         @InjectModel(User.name) private userModel: Model<User>,
         private readonly configService: ConfigService,
+        private readonly jwtService: JwtService,
     ) {}
 
     async login(body: LoginDto) {
@@ -20,7 +22,7 @@ export class AuthService {
             username: body.username,
         });
         if (!findUser) {
-            throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException('User not found');
         }
 
         const isPasswordSame = await bcrypt.compare(
@@ -29,13 +31,25 @@ export class AuthService {
         );
 
         if (!isPasswordSame) {
-            throw new HttpException(
-                'Password is incorrect',
-                HttpStatus.UNAUTHORIZED,
-            );
+            throw new UnauthorizedException('Password is incorrect');
         }
 
-        return findUser;
+        const payload = {
+            sub: findUser.id,
+            username: findUser.username,
+            email: findUser.email,
+        };
+
+        const accessToken = await this.jwtService.signAsync(payload, {
+            expiresIn: this.configService.get<number>(
+                'SECURITY.JWT_EXPIRES_IN',
+            ),
+            secret: this.configService.get<string>('SECURITY.JWT_SECRET'),
+        });
+
+        return {
+            accessToken,
+        };
     }
 
     async register(body: RegisterDto) {

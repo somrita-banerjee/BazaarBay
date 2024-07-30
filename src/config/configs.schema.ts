@@ -13,5 +13,7 @@ export const ConfigsSchema = () => ({
     },
     SECURITY: {
         SALT_ROUNDS: parseInt(process.env.SALT_ROUNDS, 10),
+        JWT_SECRET: process.env.JWT_SECRET,
+        JWT_EXPIRES_IN: parseInt(process.env.JWT_EXPIRES_IN, 10),
     },
 });

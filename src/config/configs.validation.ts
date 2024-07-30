@@ -9,4 +9,8 @@ export const ConfigsValidation = Joi.object({
     MONGO_DB: Joi.string().default('Bazaarbay'),
 
     SALT_ROUNDS: Joi.number().min(6).default(11),
+    JWT_SECRET: Joi.string().min(6).required(),
+    JWT_EXPIRES_IN: Joi.number()
+        .min(60 * 60)
+        .default(7 * 24 * 60 * 60),
 });
