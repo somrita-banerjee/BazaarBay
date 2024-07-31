@@ -12,6 +12,7 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { EmailService } from 'src/email-service';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +22,7 @@ export class AuthService {
         @InjectModel(User.name) private userModel: Model<User>,
         private readonly configService: ConfigService,
         private readonly jwtService: JwtService,
+        private readonly emailService: EmailService,
     ) {}
 
     async login(body: LoginDto) {
@@ -63,6 +65,13 @@ export class AuthService {
             'SECURITY.SALT_ROUNDS',
         );
         const hash = await bcrypt.hash(body.password, saltOrRounds);
+
+        try {
+            await this.emailService.sendWelcomeMail(body.email, body.username);
+        } catch (error) {
+            this.logger.error(error);
+        }
+
         try {
             body.password = hash;
             const newUser = new this.userModel(body);

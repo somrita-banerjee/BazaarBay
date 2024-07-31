@@ -16,4 +16,8 @@ export const ConfigsSchema = () => ({
         JWT_SECRET: process.env.JWT_SECRET,
         JWT_EXPIRES_IN: parseInt(process.env.JWT_EXPIRES_IN, 10),
     },
+    SENDGRID: {
+        API_KEY: process.env.SENDGRID_API_KEY,
+        SENDER_ADDRESS: process.env.SENDER_ADDRESS,
+    },
 });

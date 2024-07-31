@@ -13,4 +13,6 @@ export const ConfigsValidation = Joi.object({
     JWT_EXPIRES_IN: Joi.number()
         .min(60 * 60)
         .default(7 * 24 * 60 * 60),
+    SENDGRID_API_KEY: Joi.string().required(),
+    SENDER_ADDRESS: Joi.string().required(),
 });
