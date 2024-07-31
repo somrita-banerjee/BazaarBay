@@ -69,7 +69,7 @@ export class AuthService {
         try {
             await this.emailService.sendWelcomeMail(body.email, body.username);
         } catch (error) {
-            this.logger.error(error);
+            this.logger.error('mail error:', error);
         }
 
         try {

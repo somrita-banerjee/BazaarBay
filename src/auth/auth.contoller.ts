@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     Body,
     Controller,
     Get,
@@ -27,7 +28,11 @@ export class AuthController {
     @ApiOperation({ summary: 'Registration for user' })
     @Post('register')
     async register(@Body() body: RegisterDto) {
-        return await this.authService.register(body);
+        try {
+            return await this.authService.register(body);
+        } catch (error) {
+            throw new BadRequestException('Email already present');
+        }
     }
 
     @ApiOperation({ summary: 'Get my details' })
