@@ -35,8 +35,8 @@ export class ProductController {
 
     @UseGuards(AuthGuard)
     @Get(':id')
-    findOne(@Param('id') id: string, @UserFromAuth() user: any) {
-        return this.productService.findOne(+id, user);
+    async findOne(@Param('id') id: string, @UserFromAuth() user: any) {
+        return await this.productService.findOne(+id, user);
     }
 
     @UseGuards(AuthGuard)

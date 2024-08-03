@@ -41,8 +41,47 @@ export class ProductService {
         }
     }
 
-    findAll(user: any) {
-        return `This action returns all product`;
+    async findAll(user: any) {
+        let searchQuery = {};
+
+        if (user.type === USER_TYPE_ENUM.SELLER) {
+            try {
+                const seller = await this.userModel.findById(user.id);
+                if (!seller) {
+                    throw new ForbiddenException('Seller not found');
+                }
+                searchQuery = {
+                    seller,
+                };
+            } catch (error) {
+                throw new HttpException(
+                    {
+                        status: HttpStatus.BAD_REQUEST,
+                        error: error.message,
+                    },
+                    HttpStatus.BAD_REQUEST,
+                    {
+                        cause: error,
+                    },
+                );
+            }
+        }
+
+        try {
+            const products = await this.productModel.find(searchQuery);
+            return products;
+        } catch (error) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.BAD_REQUEST,
+                    error: error.message,
+                },
+                HttpStatus.BAD_REQUEST,
+                {
+                    cause: error,
+                },
+            );
+        }
     }
 
     findOne(id: number, user: any) {
