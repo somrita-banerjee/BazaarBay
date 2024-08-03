@@ -140,6 +140,30 @@ export class OrderService {
     }
 
     async remove(id: string, user: any) {
-        return `This action removes a #${id} order`;
+        if (user.type !== USER_TYPE_ENUM.BUYER) {
+            throw new ForbiddenException('Only buyer can Delete');
+        }
+        try {
+            const buyer = await this.userModel.findById(user.id);
+            if (!buyer) {
+                throw new ForbiddenException('Buyer not found');
+            }
+
+            return await this.orderModel.deleteOne({
+                _id: id,
+                buyer,
+            });
+        } catch (error) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.BAD_REQUEST,
+                    error: error.message,
+                },
+                HttpStatus.BAD_REQUEST,
+                {
+                    cause: error,
+                },
+            );
+        }
     }
 }
