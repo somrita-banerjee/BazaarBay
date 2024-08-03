@@ -44,8 +44,11 @@ export class AuthService {
 
         const payload = {
             sub: findUser.id,
+            id: findUser.id,
             username: findUser.username,
             email: findUser.email,
+            phone_no: findUser.phone_no,
+            type: findUser.type,
         };
 
         const accessToken = await this.jwtService.signAsync(payload, {

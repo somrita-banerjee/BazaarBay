@@ -1,34 +1,57 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    UseGuards,
+    Request,
+} from '@nestjs/common';
 import { ProductService } from './product.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { CreateProductDto, UpdateProductDto } from './product.dto';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { UserFromAuth } from 'src/decorator/userFromAuth.decorator';
 
 @Controller('product')
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+    constructor(private readonly productService: ProductService) {}
 
-  @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
-  }
+    @UseGuards(AuthGuard)
+    @Post()
+    create(
+        @Body() createProductDto: CreateProductDto,
+        @UserFromAuth() user: any,
+    ) {
+        return this.productService.create(createProductDto, user);
+    }
 
-  @Get()
-  findAll() {
-    return this.productService.findAll();
-  }
+    @UseGuards(AuthGuard)
+    @Get()
+    findAll(@UserFromAuth() user: any) {
+        return this.productService.findAll(user);
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
-  }
+    @UseGuards(AuthGuard)
+    @Get(':id')
+    findOne(@Param('id') id: string, @UserFromAuth() user: any) {
+        return this.productService.findOne(+id, user);
+    }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
-  }
+    @UseGuards(AuthGuard)
+    @Patch(':id')
+    update(
+        @Param('id') id: string,
+        @Body() updateProductDto: UpdateProductDto,
+        @UserFromAuth() user: any,
+    ) {
+        return this.productService.update(+id, updateProductDto, user);
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productService.remove(+id);
-  }
+    @UseGuards(AuthGuard)
+    @Delete(':id')
+    remove(@Param('id') id: string, @UserFromAuth() user: any) {
+        return this.productService.remove(+id, user);
+    }
 }

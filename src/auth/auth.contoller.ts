@@ -13,6 +13,7 @@ import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './auth.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { UserFromAuth } from 'src/decorator/userFromAuth.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -38,7 +39,7 @@ export class AuthController {
     @ApiOperation({ summary: 'Get my details' })
     @UseGuards(AuthGuard)
     @Get('me')
-    async getMe(@Request() req: any) {
-        return await this.authService.getMe(req.user.sub);
+    async getMe(@UserFromAuth() user: any) {
+        return await this.authService.getMe(user.sub);
     }
 }
