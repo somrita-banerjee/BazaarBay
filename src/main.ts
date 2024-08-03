@@ -15,7 +15,7 @@ import { ConfigService } from '@nestjs/config';
 import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { LoggingInterceptor } from 'interceptors/logging.interceptor';
+import { LoggingInterceptor } from 'src/interceptors/logging.interceptor';
 
 // loglevel - returns loglevels based on system environment == prpduction
 /**
