@@ -68,7 +68,13 @@ export class ProductService {
         }
 
         try {
-            const products = await this.productModel.find(searchQuery);
+            const products = await this.productModel
+                .find(searchQuery)
+                .populate({
+                    path: 'seller',
+                    select: 'username',
+                })
+                .exec();
             return products;
         } catch (error) {
             throw new HttpException(
@@ -112,7 +118,13 @@ export class ProductService {
         }
 
         try {
-            const product = await this.productModel.findOne(searchQuery);
+            const product = await this.productModel
+                .findOne(searchQuery)
+                .populate({
+                    path: 'seller',
+                    select: 'username',
+                })
+                .exec();
             return product;
         } catch (error) {
             throw new HttpException(
