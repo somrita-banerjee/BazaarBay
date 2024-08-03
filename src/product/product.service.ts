@@ -132,7 +132,31 @@ export class ProductService {
         return `This action updates a #${id} product`;
     }
 
-    remove(id: number, user: any) {
-        return `This action removes a #${id} product`;
+    async remove(id: string, user: any) {
+        if (user.type !== USER_TYPE_ENUM.SELLER) {
+            throw new ForbiddenException('Only seller can delete');
+        }
+        try {
+            const seller = await this.userModel.findById(user.id);
+            if (!seller) {
+                throw new ForbiddenException('Seller not found');
+            }
+
+            return await this.productModel.deleteOne({
+                _id: id,
+                seller,
+            });
+        } catch (error) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.BAD_REQUEST,
+                    error: error.message,
+                },
+                HttpStatus.BAD_REQUEST,
+                {
+                    cause: error,
+                },
+            );
+        }
     }
 }

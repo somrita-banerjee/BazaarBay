@@ -52,6 +52,6 @@ export class ProductController {
     @UseGuards(AuthGuard)
     @Delete(':id')
     remove(@Param('id') id: string, @UserFromAuth() user: any) {
-        return this.productService.remove(+id, user);
+        return this.productService.remove(id, user);
     }
 }
