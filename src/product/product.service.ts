@@ -128,8 +128,40 @@ export class ProductService {
         }
     }
 
-    update(id: number, updateProductDto: UpdateProductDto, user: any) {
-        return `This action updates a #${id} product`;
+    async update(id: string, updateProductDto: UpdateProductDto, user: any) {
+        console.log(user);
+        if (user.type !== USER_TYPE_ENUM.SELLER) {
+            throw new ForbiddenException('Only seller can update Product');
+        }
+        try {
+            const seller = await this.userModel.findById(user.id);
+            if (!seller) {
+                throw new ForbiddenException('Seller not found');
+            }
+
+            return this.productModel.updateOne(
+                {
+                    _id: id,
+                    seller,
+                },
+                updateProductDto,
+
+                {
+                    new: true,
+                },
+            );
+        } catch (error) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.BAD_REQUEST,
+                    error: error.message,
+                },
+                HttpStatus.BAD_REQUEST,
+                {
+                    cause: error,
+                },
+            );
+        }
     }
 
     async remove(id: string, user: any) {

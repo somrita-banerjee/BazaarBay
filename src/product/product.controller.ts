@@ -46,7 +46,7 @@ export class ProductController {
         @Body() updateProductDto: UpdateProductDto,
         @UserFromAuth() user: any,
     ) {
-        return this.productService.update(+id, updateProductDto, user);
+        return this.productService.update(id, updateProductDto, user);
     }
 
     @UseGuards(AuthGuard)
