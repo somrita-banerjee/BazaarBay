@@ -84,8 +84,48 @@ export class ProductService {
         }
     }
 
-    findOne(id: number, user: any) {
-        return `This action returns a #${id} product`;
+    async findOne(id: string, user: any) {
+        let searchQuery: any = { _id: id };
+
+        if (user.type === USER_TYPE_ENUM.SELLER) {
+            try {
+                const seller = await this.userModel.findById(user.id);
+                if (!seller) {
+                    throw new ForbiddenException('Seller not found');
+                }
+                searchQuery = {
+                    ...searchQuery,
+                    seller,
+                };
+            } catch (error) {
+                throw new HttpException(
+                    {
+                        status: HttpStatus.BAD_REQUEST,
+                        error: error.message,
+                    },
+                    HttpStatus.BAD_REQUEST,
+                    {
+                        cause: error,
+                    },
+                );
+            }
+        }
+
+        try {
+            const product = await this.productModel.findOne(searchQuery);
+            return product;
+        } catch (error) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.BAD_REQUEST,
+                    error: error.message,
+                },
+                HttpStatus.BAD_REQUEST,
+                {
+                    cause: error,
+                },
+            );
+        }
     }
 
     update(id: number, updateProductDto: UpdateProductDto, user: any) {
