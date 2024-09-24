@@ -5,12 +5,18 @@ import { LoginRequestBodyDTO, RegisterRequestBodyDTO } from '@/src/utils/dto';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 export default function Auth() {
-    return <Login />;
+    const [isLogin, setIsLogin] = useState<boolean>(true);
+    if (isLogin) return <Login setIsLogin={setIsLogin} />;
+    else return <Register setIsLogin={setIsLogin} />;
+}
+interface Props {
+    setIsLogin: Dispatch<SetStateAction<boolean>>;
 }
 
-const Login = () => {
+const Login: React.FC<Props> = ({ setIsLogin }) => {
     const { register, handleSubmit } = useForm<LoginRequestBodyDTO>();
     const router = useRouter();
 
@@ -36,32 +42,22 @@ const Login = () => {
                     className="mt-8 space-y-6"
                     onSubmit={handleSubmit(onSubmit)}
                 >
-                    <div className="rounded-md shadow-lg -space-y-px divide-y-4">
-                        <div className="p-2 flex items-center justify-center text-black-100 text-xl  shadow-sm fit-100%">
-                            <label
-                                htmlFor="username"
-                                className="not-sr-only p-2 "
-                            >
-                                Username
-                            </label>
+                    <div className="rounded-md shadow-lg space-y-2">
+                        <div className="p-2 flex items-center text-xl justify-center shadow-sm">
                             <input
                                 id="username"
                                 type="text"
+                                placeholder="Username"
                                 {...register('username', {
                                     required: 'Username is required',
                                 })}
                             />
                         </div>
-                        <div className="p-2 flex items-center justify-center text-black-100 text-xl  shadow-sm">
-                            <label
-                                htmlFor="password"
-                                className="not-sr-only p-2"
-                            >
-                                Password
-                            </label>
+                        <div className="p-2 flex items-center text-xl justify-center shadow-sm">
                             <input
                                 id="password"
                                 type="password"
+                                placeholder="Password"
                                 {...register('password', {
                                     required: 'Password is required',
                                 })}
@@ -96,7 +92,7 @@ const Login = () => {
     );
 };
 
-const Register = () => {
+const Register: React.FC<Props> = ({ setIsLogin }) => {
     const { register, handleSubmit } = useForm<RegisterRequestBodyDTO>();
     const router = useRouter();
 
@@ -146,4 +142,3 @@ const Register = () => {
         </form>
     );
 };
-
