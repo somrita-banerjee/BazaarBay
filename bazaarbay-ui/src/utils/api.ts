@@ -9,6 +9,7 @@ import {
 } from './dto';
 
 const API_URL = 'http://localhost:5000'; // Replace with your backend API URL
+const BEARER_TOKEN = sessionStorage.getItem('accessToken');
 
 // For login
 export const loginUser = async (data: LoginRequestBodyDTO) => {
@@ -22,7 +23,17 @@ export const registerUser = async (data: RegisterRequestBodyDTO) => {
 
 // Get all products
 export const getProducts = async () => {
-    return await axios.get<ProductDTO[]>(`${API_URL}/product`);
+    try {
+        const response = await axios.get<ProductDTO[]>(`${API_URL}/product`, {
+            headers: {
+                Authorization: `Bearer ${BEARER_TOKEN}`,
+            },
+        });
+        return response; // Return the data from the response
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        throw error; // Rethrow the error for further handling
+    }
 };
 
 // For CRUD on products

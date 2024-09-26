@@ -20,6 +20,8 @@ export interface RegisterRequestBodyDTO {
 }
 
 export interface ProductDTO {
+    imageUrl: string | undefined;
+    description: string;
     _id: string;
     name: string;
     price: number;
