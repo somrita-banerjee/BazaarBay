@@ -22,7 +22,8 @@ const Login: React.FC<Props> = ({ setIsLogin }) => {
 
     const onSubmit = async (data: LoginRequestBodyDTO) => {
         try {
-            await loginUser(data);
+            const resp = await loginUser(data);
+            sessionStorage.setItem('accessToken', resp.data.accessToken);
             toast.success('Login successful !');
             router.push('/');
         } catch (err) {
